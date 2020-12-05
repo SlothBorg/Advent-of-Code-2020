@@ -43,11 +43,16 @@ def parse_column(columns, letter):
 def calc_seat_id(row, column):
     return row * 8 + column
 
-seat_ids = 0
+
+def find_seat_id(ids):
+    ids.sort()
+    return [x for x in range(ids[0], ids[-1]+1) if x not in ids][0]
+
+
+seat_ids = []
 for boarding_pass in get_data():
     parsed_boarding_pase = parse_boarding_pass(boarding_pass)
-    seat_id = calc_seat_id(parsed_boarding_pase[0], parsed_boarding_pase[1])
-    if seat_id > seat_ids:
-        seat_ids = seat_id
+    seat_ids.append(calc_seat_id(parsed_boarding_pase[0], parsed_boarding_pase[1]))
 
-print(seat_ids)
+print(max(seat_ids))
+print(find_seat_id(seat_ids))
