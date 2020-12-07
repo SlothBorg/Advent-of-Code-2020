@@ -4,40 +4,15 @@ def get_data():
 
 
 def parse_boarding_pass(boarding_pass):
-    rows = [*range(128)]
-    columns = [*range(8)]
-    for index, letter in enumerate(boarding_pass):
-        if index < 7:
-            rows = parse_row(rows, letter)
-        else:
-            columns = parse_column(columns, letter)
-    return [rows[0], columns[0]]
+    return boarding_pass.replace('F', '0').replace('B', '1').replace('R', '1').replace('L', '0')
 
 
-def parse_row(rows, letter):
-    if letter == 'B':
-        rows = split_list(rows)
-    elif letter == 'F':
-        rows = split_list(rows, True)
-
-    return rows
+def calc_row(rows):
+    return int(rows[:7], 2)
 
 
-def split_list(list, lower=False):
-    half = len(list) // 2
-    if lower:
-        return list[:half]
-    else:
-        return list[half:]
-
-
-def parse_column(columns, letter):
-    if letter == 'R':
-        columns = split_list(columns)
-    elif letter == 'L':
-        columns = split_list(columns, True)
-
-    return columns
+def calc_column(columns):
+    return int(columns[-3:], 2)
 
 
 def calc_seat_id(row, column):
@@ -52,7 +27,7 @@ def find_seat_id(ids):
 seat_ids = []
 for boarding_pass in get_data():
     parsed_boarding_pase = parse_boarding_pass(boarding_pass)
-    seat_ids.append(calc_seat_id(parsed_boarding_pase[0], parsed_boarding_pase[1]))
+    seat_ids.append(calc_seat_id(calc_row(parsed_boarding_pase), calc_column(parsed_boarding_pase)))
 
 print(max(seat_ids))
 print(find_seat_id(seat_ids))
